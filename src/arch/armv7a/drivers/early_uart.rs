@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 const UDR: isize = 0x00;
 const UFR: isize = 0x18;
 
@@ -14,7 +16,7 @@ pub struct Uart {
   base: *mut u8,
 }
 
-pub static mut uarts: [Uart; 4] = [
+pub static mut UARTS: [Uart; 4] = [
   Uart {base: 0x101F1000 as *mut u8},
   Uart {base: 0x101F2000 as *mut u8},
   Uart {base: 0x101F3000 as *mut u8},
@@ -43,6 +45,12 @@ impl Uart {
           return;
         }
       }
+    }
+  }
+
+  pub fn puts(&mut self, data: &str) {
+    for c in data.as_bytes() {
+      self.put(*c);
     }
   }
 }

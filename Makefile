@@ -1,47 +1,39 @@
+all: bin
 
-TARGET = armv7a-none-eabi
+ARCH = armv7a
+TARGET = arm-none-eabi
+
 O = target
 CONFIG = debug
 
-all: bin
-
-${O}:
-	mkdir -p ${O}
-
-ELF := ${O}/kernel.elf
 BIN := ${O}/kernel.bin
+LIBERTOS := $(abspath $(O)/${TARGET}/${CONFIG}/libertos.a)
 
-CRT_0 := ${O}/crt0.o
-LIBERTOS := $(abspath $(O)/${TARGET}/${CONFIG}/libertos.rlib)
+include src/arch/$(ARCH)/Arch.mk
 
-${ELF}: ${LIBERTOS} ${CRT_0}
-	ld.lld -T src/asm/ld.lld $^ -o $@
-
+# Always build using cargo to enumerate rust dependencies.
+_alwaysbuild:
+${LIBERTOS}: _alwaysbuild
+	xargo build "--target-dir=${O}" --target ${TARGET}
 ${BIN}: ${ELF}
 	llvm-objcopy -O binary $^ $@
-
-${CRT_0}: | ${O}
-	clang -target $(TARGET) -c src/asm/crt0.S -o ${CRT_0}
-
-
-
+${O}:
+	mkdir -p ${O}
 ##########################################################################
-### Cargo produces dependency files which we can use to track rebuilds ###
-${LIBERTOS}: 
-	xargo build "--target-dir=${O}" --target ${TARGET}
--include target/${TARGET}/${CONFIG}/libertos.d
-##########################################################################
-
-qemu:
-	qemu-system-arm -M versatilepb -kernel target/kernel.bin \
-	    -cpu cortex-a7 -m 128M -nographic -serial mon:stdio -gdb tcp::1234 -S
-lldb:
-	lldb ${ELF} --one-line 'gdb-remote 1234' -s .lldbrc
-
 # Rename additional targets
 elf: ${ELF}
 bin: ${BIN}
 clean:
 	cargo clean
+##########################################################################
 
-.PHONY: all clean elf bin
+##########################################################################
+### 			Additional phony scripts 		       ###
+qemu:
+	qemu-system-arm -M versatilepb -kernel target/kernel.bin \
+	    -cpu cortex-a7 -m 128M -nographic -serial mon:stdio -gdb tcp::1234 -S
+lldb:
+	lldb ${ELF} --one-line 'gdb-remote 1234' -s .lldbrc
+##########################################################################
+
+.PHONY: all clean elf bin qemu lldb 
