@@ -34,9 +34,9 @@ ${LIBERTOS}:
 
 qemu:
 	qemu-system-arm -M versatilepb -kernel target/kernel.bin \
-	    -nographic -serial /dev/null -gdb tcp::1234 -S
+	    -cpu cortex-a7 -m 128M -nographic -serial mon:stdio -gdb tcp::1234 -S
 lldb:
-	lldb --one-line 'gdb-remote 1234' -s .lldbrc
+	lldb ${ELF} --one-line 'gdb-remote 1234' -s .lldbrc
 
 # Rename additional targets
 elf: ${ELF}
