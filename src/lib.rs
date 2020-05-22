@@ -5,9 +5,16 @@
 
 use core::panic::PanicInfo;
 
-#[no_mangle]
-pub extern "C" fn main() {
+mod uart;
 
+#[no_mangle]
+pub extern "C" fn main() -> !{
+  unsafe {
+    loop {
+      let val = uart::uarts[0].getu8();
+      uart::uarts[0].put(val);
+    }
+  }
 }
 
 // These functions and traits are used by the compiler, but not
