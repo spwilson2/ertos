@@ -3,12 +3,14 @@ TARGET = armv7a-none-eabi
 O = target
 CONFIG = debug
 
-all: elf
+all: bin
 
 ${O}:
 	mkdir -p ${O}
 
 ELF := ${O}/kernel.elf
+BIN := ${O}/kernel.bin
+
 CRT_0 := ${O}/crt0.o
 LIBERTOS := $(O)/${TARGET}/${CONFIG}/libertos.rlib 
 
@@ -21,11 +23,14 @@ ${CRT_0}: | ${O}
 ${LIBERTOS}: 
 	xargo build "--target-dir=${O}" --target ${TARGET}
 
+${BIN}: ${ELF}
+	llvm-objcopy -O binary $^ $@
+
 -include target/${TARGET}/${CONFIG}/libertos.d
 
 elf: ${ELF}
+bin: ${BIN}
 clean:
 	cargo clean
 
-.PHONY: all clean elf
-
+.PHONY: all clean elf bin
