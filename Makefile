@@ -12,7 +12,7 @@ ELF := ${O}/kernel.elf
 BIN := ${O}/kernel.bin
 
 CRT_0 := ${O}/crt0.o
-LIBERTOS := $(O)/${TARGET}/${CONFIG}/libertos.rlib 
+LIBERTOS := $(abspath $(O)/${TARGET}/${CONFIG}/libertos.rlib)
 
 ${ELF}: ${LIBERTOS} ${CRT_0}
 	ld.lld -T src/asm/ld.lld $^ -o $@
