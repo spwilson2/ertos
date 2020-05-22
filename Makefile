@@ -5,7 +5,7 @@ CONFIG = debug
 
 all: elf
 
-_builddir:
+${O}:
 	mkdir -p ${O}
 
 ELF := ${O}/kernel.elf
@@ -15,11 +15,12 @@ LIBERTOS := $(O)/${TARGET}/${CONFIG}/libertos.rlib
 ${ELF}: ${LIBERTOS} ${CRT_0}
 	ld.lld -T src/asm/ld.lld $^ -o $@
 
-${CRT_0}: _builddir
+${CRT_0}: | ${O}
 	clang -target $(TARGET) -c src/asm/crt0.S -o ${CRT_0}
 
 ${LIBERTOS}: 
 	xargo build "--target-dir=${O}" --target ${TARGET}
+
 -include target/${TARGET}/${CONFIG}/libertos.d
 
 elf: ${ELF}
