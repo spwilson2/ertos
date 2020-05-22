@@ -17,17 +17,28 @@ LIBERTOS := $(O)/${TARGET}/${CONFIG}/libertos.rlib
 ${ELF}: ${LIBERTOS} ${CRT_0}
 	ld.lld -T src/asm/ld.lld $^ -o $@
 
-${CRT_0}: | ${O}
-	clang -target $(TARGET) -c src/asm/crt0.S -o ${CRT_0}
-
-${LIBERTOS}: 
-	xargo build "--target-dir=${O}" --target ${TARGET}
-
 ${BIN}: ${ELF}
 	llvm-objcopy -O binary $^ $@
 
--include target/${TARGET}/${CONFIG}/libertos.d
+${CRT_0}: | ${O}
+	clang -target $(TARGET) -c src/asm/crt0.S -o ${CRT_0}
 
+
+
+##########################################################################
+### Cargo produces dependency files which we can use to track rebuilds ###
+${LIBERTOS}: 
+	xargo build "--target-dir=${O}" --target ${TARGET}
+-include target/${TARGET}/${CONFIG}/libertos.d
+##########################################################################
+
+qemu:
+	qemu-system-arm -M versatilepb -kernel target/kernel.bin \
+	    -nographic -serial /dev/null -gdb tcp::1234 -S
+lldb:
+	lldb --one-line 'gdb-remote 1234' -s .lldbrc
+
+# Rename additional targets
 elf: ${ELF}
 bin: ${BIN}
 clean:
