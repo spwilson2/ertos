@@ -1,7 +1,7 @@
 all: bin
 
-ARCH = armv7a
-TARGET = arm-none-eabi
+ARCH = riscv
+TARGET = riscv64gc-none-elf
 
 O = target
 CONFIG = debug
@@ -30,10 +30,14 @@ clean:
 ##########################################################################
 ### 			Additional phony scripts 		       ###
 qemu:
-	qemu-system-arm -M versatilepb -kernel target/kernel.bin \
-	    -cpu cortex-a7 -m 128M -nographic -serial mon:stdio -gdb tcp::1234 -S
-lldb:
-	lldb ${ELF} --one-line 'gdb-remote 1234' -s .lldbrc
+	qemu-system-riscv64 -M virt -bios none -kernel target/kernel.elf \
+	    -m 128M -nographic -serial mon:stdio -gdb tcp::1234 -S
+# Currently no lldb riscv support :(
+#lldb:
+#	lldb ${ELF} --one-line 'gdb-remote 1234' -s .lldbrc
+
+gdb: 
+	riscv64-linux-gnu-gdb target/kernel.elf --ex "target remote tcp::1234"
 ##########################################################################
 
 .PHONY: all clean elf bin qemu lldb 

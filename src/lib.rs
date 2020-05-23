@@ -13,13 +13,8 @@ use crate::arch::*;
 
 #[no_mangle]
 pub extern "C" fn main() -> !{
-  early_println!("Beginning echo loop!");
-    loop {
-      unsafe {
-        let c = arch::drivers::early_uart::UARTS[0].getu8();
-        arch::drivers::early_uart::UARTS[0].put(c);
-      }
-    }
+  loop {
+  }
 }
 
 // These functions and traits are used by the compiler, but not

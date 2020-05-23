@@ -1,7 +1,7 @@
 
 //Namespace the arch dir.
-#[cfg(target_arch = "arm")]
+#[cfg(target_arch = "riscv")]
 #[macro_use]
-pub mod armv7a;
-#[cfg(target_arch = "arm")]
-pub use self::armv7a::*;
+pub mod riscv;
+#[cfg(target_arch = "riscv")]
+pub use self::riscv::*;
