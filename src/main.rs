@@ -5,24 +5,19 @@
 #![feature(global_asm)]
 #![no_std]
 #![no_main]
-
 #![test_runner(crate::test_runner)]
-
-use core::panic::PanicInfo;
 
 #[macro_use]
 pub mod arch;
 
 #[no_mangle]
 extern "C" fn kinit() -> ! {
-  loop {}
-}
+    let mut uart = arch::drivers::uart::Uart::new(0x10000000);
+    uart.init();
+    println!("Hello");
 
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    loop {}
+    panic!("Done");
 }
-
 
 #[cfg(test)]
 fn test_runner(tests: &[&dyn Fn()]) {

@@ -27,6 +27,10 @@
   - https://embarc.org/man-pages/as/RISC_002dV_002dDirectives.html
 
 
+- open-cores-NS16550.pdf
+
+  - http://docplayer.net/21367798-Uart-ip-core-specification-author-jacob-gorban-gorban-opencores-org.html
+
 Fantastic Blogs:
 - https://osblog.stephenmarz.com/index.html
 - https://os.phil-opp.com/
