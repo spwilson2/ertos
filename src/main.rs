@@ -1,3 +1,4 @@
+#![feature(panic_info_message)]
 #![feature(custom_test_frameworks)]
 #![feature(llvm_asm)]
 #![feature(lang_items)]
@@ -16,7 +17,8 @@ extern "C" fn kinit() -> ! {
     uart.init();
     println!("Hello");
 
-    panic!("Done");
+    panic!("bye");
+    //arch::panic::abort();
 }
 
 #[cfg(test)]
