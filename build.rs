@@ -4,6 +4,7 @@ fn main() {
     use std::fs;
 
     println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-env-changed=TARGET"); 
 
     if !env::var("TARGET").unwrap().contains("riscv64") {
       return;

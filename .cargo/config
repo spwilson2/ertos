@@ -2,5 +2,5 @@
 target = "riscv64gc-unknown-none-elf"
 
 [target.riscv64gc-unknown-none-elf]
-runner = "qemu-system-riscv64 -machine virt -cpu rv64 -d guest_errors,unimp -smp 4 -m 128M -drive if=none,format=raw,file=hdd.dsk,id=foo -device virtio-blk-device,scsi=off,drive=foo -serial mon:stdio -bios none -device virtio-rng-device -device virtio-gpu-device -device virtio-net-device -device virtio-tablet-device -device virtio-keyboard-device -kernel "
+runner = "qemu-system-riscv64 -M virt -bios none -m 128M -nographic -serial mon:stdio -gdb tcp::1234 -kernel "
 rustflags = ['-Clink-arg=-Tsrc/arch/riscv64/linker.ld']
