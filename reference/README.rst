@@ -25,3 +25,8 @@
 - RISC-V assembly directives;
 
   - https://embarc.org/man-pages/as/RISC_002dV_002dDirectives.html
+
+
+Fantastic Blogs:
+- https://osblog.stephenmarz.com/index.html
+- https://os.phil-opp.com/

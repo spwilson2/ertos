@@ -4,10 +4,15 @@ version = "0.1.0"
 authors = ["Sean Wilson <sean.wilson@ghs.com>"]
 edition = "2018"
 
-[lib]
-name = "ertos"
-crate-type = ["staticlib"]
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[dependencies]
-compiler_builtins = { git = "https://github.com/rust-lang/compiler-builtins" }
+[profile.dev]
+opt-level = 0
+lto = false
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[build-dependencies]
+cc = { version = "1.0", features = ["parallel"] }
